@@ -17,6 +17,10 @@ section#balance {
     h3 {
       font-size: 1rem;
       font-weight: normal;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     p {
@@ -26,10 +30,16 @@ section#balance {
 
     
     &.total {
-      background: #49aa26;
+      background: var(--green);
       color: #fff;
     }
   }
+}
+
+section#transaction {
+  width: 100%;
+  display: block;
+  overflow-x: auto;
 }
 
 table#data-table {
@@ -38,9 +48,14 @@ table#data-table {
   color: #969cb3;
 
   thead, tbody {
+    
     tr {
       th:first-child, td:first-child {
         border-radius: 0.25rem 0 0 0.25rem;
+      }
+
+      th:last-child, td:last-child {
+        border-radius: 0 0.25rem 0.25rem 0;
       }
     }
   }
@@ -76,6 +91,70 @@ table#data-table {
     
     &.expense {
       color: #e92929;
+    }
+  }
+}
+
+// Modal 
+div.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+div.modal-overlay {
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0,0,0,0.7);
+
+  position: fixed;
+  top: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  visibility: hidden;
+
+  div.modal {
+    background: #f0f2f5;
+
+    padding: 2.4rem;
+    // position: relative;
+
+    #form {
+      max-width: 500px;
+
+      h2 {
+        margin-top: 0;
+      }
+
+      .input-group.actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        a, button {
+          width: 48%;
+        }
+      }
+
+      .input-group {
+        margin-top: 0.8rem;
+
+        small {
+          opacity: 0.4;
+        }
+      }
+
+      form input {
+        width: 100%;
+        border: 0;
+        border-radius: .2rem;
+
+        padding: .8rem;
+      }
     }
   }
 }
