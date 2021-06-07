@@ -115,6 +115,7 @@ div.modal-overlay {
   justify-content: center;
 
   opacity: 0;
+  z-index: 10;
   visibility: hidden;
 
   div.modal {
