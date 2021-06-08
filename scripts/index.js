@@ -6,29 +6,19 @@ const Modal = {
   }
 };
 
+const Storage = {
+  get() {
+    const transactions = JSON.parse(localStorage.getItem("dev.finance:transactions")) || [];
+
+    return transactions;
+  },
+  set(transactions) {
+    localStorage.setItem("dev.finance:transactions", JSON.stringify(transactions));
+  }
+}
+
 const Transaction = {
-  all: [
-    {
-      description: "Luz",
-      amount: -50000,
-      date: '23/01/2021',
-    },
-    {
-      description: "Criação Website",
-      amount: 500000,
-      date: '07/06/2021',
-    },
-    {
-      description: "Internet",
-      amount: -20000,
-      date: '09/06/2021',
-    },
-    {
-      description: "App",
-      amount: 200000,
-      date: '09/06/2021',
-    },
-  ],
+  all: Storage.get(),
 
   add(transaction) {
     Transaction.all.push(transaction);
@@ -45,7 +35,7 @@ const Transaction = {
   },
 
   incomes() {
-    let income = 3;
+    let income = 0;
 
     Transaction.all.forEach(transaction => {
       if (transaction.amount > 0) {
@@ -78,13 +68,14 @@ const DOM = {
 
   addTransaction(transaction, index) {
     const tr = document.createElement("tr");
+    tr.dataset.index = index;
 
-    tr.innerHTML = DOM.innerHtmlTransaction(transaction);
+    tr.innerHTML = DOM.innerHtmlTransaction(transaction, index);
 
     DOM.transactionContainer.appendChild(tr);
   },
 
-  innerHtmlTransaction(transaction) {
+  innerHtmlTransaction(transaction, index) {
     const CSSclass = transaction.amount > 0 ? "income" : "expense";
 
     const amount = Utils.formatCurrency(transaction.amount);
@@ -95,7 +86,7 @@ const DOM = {
       <td class="date">${transaction.date}</td>
       
       <td>
-        <img src="assets/minus.svg" alt="Remover transação">
+        <img onclick="Transaction.remove(${index})" src="assets/minus.svg" alt="Remover transação">
       </td>
     `;
 
@@ -144,7 +135,7 @@ const Utils = {
 
 const Form = {
   description: document.querySelector("input#description"),
-  amount: document.querySelector("input#amount"),
+  amount: document.querySelector("#amount"),
   date: document.querySelector("input#date"),
 
   getValues() {
@@ -194,7 +185,6 @@ const Form = {
 
       Form.clearFields();
       Modal.toggle();
-
     } catch (error) {
       alert(error.message);
     }
@@ -203,11 +193,13 @@ const Form = {
 
 const App = {
   init() {
-    Transaction.all.forEach(transaction => {
-      DOM.addTransaction(transaction);
+    Transaction.all.forEach((transaction, index)=> {
+      DOM.addTransaction(transaction, index);
     });
     
     DOM.updateBalance();
+
+    Storage.set(Transaction.all);
   },
   reload() {
     DOM.clearTransactions();
